@@ -20,8 +20,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #ifndef TetrisMatrixDraw_h
 #define TetrisMatrixDraw_h
 
-#include <Arduino.h>
-#include "Adafruit_GFX.h"
+#include "led-matrix.h"
+#include "graphics.h"
+#include <iostream>
+
+using rgb_matrix::GPIO;
+using rgb_matrix::RGBMatrix;
+using rgb_matrix::Canvas;
+
+using namespace std;
+using namespace rgb_matrix;
 
 #define TETRIS_MAX_NUMBERS 9
 
@@ -40,39 +48,40 @@ typedef struct
 class TetrisMatrixDraw
 {
     public:
-        TetrisMatrixDraw (Adafruit_GFX  &display);
-        Adafruit_GFX  *display;
+        TetrisMatrixDraw (Canvas  &display);
+        Canvas  *display;
         bool drawNumbers(int x = 0, int y = 0, bool displayColon = false);
         bool drawText(int x = 0, int y = 0);
-        void drawChar(String letter, uint8_t x, uint8_t y, uint16_t color);
-        void drawShape(int blocktype, uint16_t color, int x_pos, int y_pos, int num_rot);
-        void drawLargerShape(int scale, int blocktype, uint16_t color, int x_pos, int y_pos, int num_rot);
-        void setTime(String time, bool forceRefresh = false);
+        void drawChar(string letter, uint8_t x, uint8_t y, Color color);
+        void drawShape(int blocktype, Color color, int x_pos, int y_pos, int num_rot);
+        void drawLargerShape(int scale, int blocktype, Color color, int x_pos, int y_pos, int num_rot);
+        void setTime(string time, bool forceRefresh = false);
         void setNumbers(int value, bool forceRefresh = false);
-        void setText(String txt, bool forceRefresh = false);
+        void setText(string txt, bool forceRefresh = false);
         void setNumState(int index, int value, int x_shift);
-        void drawColon(int x, int y, uint16_t colonColour);
+        void drawColon(int x, int y, Color colonColour);
         int calculateWidth();
         bool _debug = false;
         int scale = 1;
         bool drawOutline = false;
-        uint16_t outLineColour = 0x0000;
+        Color outLineColour = Color(0, 0, 0);
 
-        uint16_t tetrisColors[9];
-        uint16_t tetrisRED;
-        uint16_t tetrisGREEN;
-        uint16_t tetrisBLUE;
-        uint16_t tetrisWHITE;
-        uint16_t tetrisYELLOW;
-        uint16_t tetrisCYAN;
-        uint16_t tetrisMAGENTA;
-        uint16_t tetrisORANGE;
-        uint16_t tetrisBLACK;
+        Color tetrisColors[9];
+        Color tetrisRED;
+        Color tetrisGREEN;
+        Color tetrisBLUE;
+        Color tetrisWHITE;
+        Color tetrisYELLOW;
+        Color tetrisCYAN;
+        Color tetrisMAGENTA;
+        Color tetrisORANGE;
+        Color tetrisBLACK;
 
     private:
         void intialiseColors();
         void resetNumStates();
-        void drawLargerBlock(int x_pos, int y_pos, int scale, uint16_t color);
+        void drawLargerBlock(int x_pos, int y_pos, int scale, Color color);
+        void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, Color color);
         numstate numstates[TETRIS_MAX_NUMBERS];
         int sizeOfValue;
 };

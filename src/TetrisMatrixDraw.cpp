@@ -20,32 +20,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #include "TetrisMatrixDraw.h"
 #include "TetrisNumbers.h"
 #include "TetrisLetters.h"
+#include <algorithm>
 
-TetrisMatrixDraw::TetrisMatrixDraw(Adafruit_GFX &display)	{
+TetrisMatrixDraw::TetrisMatrixDraw(Canvas &display)	{
     this->display = &display;
     intialiseColors();
     resetNumStates();
 }
 
-void TetrisMatrixDraw::drawChar(String letter, uint8_t x, uint8_t y, uint16_t color)
+void TetrisMatrixDraw::drawChar(string letter, uint8_t x, uint8_t y, Color color)
 {
-    this->display->setTextColor(color);
+    /*this->display->setTextColor(color);
     this->display->setCursor(x, y);
-    this->display->print(letter);
+    this->display->print(letter);*/
 }
 
 // *********************************************************************
 // Draws a brick shape at a given position
 // *********************************************************************
-void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y_pos, int num_rot)
+void TetrisMatrixDraw::drawShape(int blocktype, Color color, int x_pos, int y_pos, int num_rot)
 {
   // Square
   if (blocktype == 0)
   {
-    this->display->drawPixel(x_pos, y_pos, color);
-    this->display->drawPixel(x_pos + 1, y_pos, color);
-    this->display->drawPixel(x_pos, y_pos - 1, color);
-    this->display->drawPixel(x_pos + 1, y_pos - 1, color);
+    this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+    this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+    this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+    this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
   }
 
   // L-Shape
@@ -53,31 +54,31 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
   {
     if (num_rot == 0)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos, y_pos - 2, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 2, color.r, color.g, color.b);
     }
     if (num_rot == 1)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 2, y_pos - 1, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos - 1, color.r, color.g, color.b);
     }
     if (num_rot == 2)
     {
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 2, color);
-      this->display->drawPixel(x_pos, y_pos - 2, color);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 2, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 2, color.r, color.g, color.b);
     }
     if (num_rot == 3)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 2, y_pos, color);
-      this->display->drawPixel(x_pos + 2, y_pos - 1, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos - 1, color.r, color.g, color.b);
     }
   }
 
@@ -86,31 +87,31 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
   {
     if (num_rot == 0)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 2, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 2, color.r, color.g, color.b);
     }
     if (num_rot == 1)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 2, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
     }
     if (num_rot == 2)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos, y_pos - 2, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 2, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 2, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 2, color.r, color.g, color.b);
     }
     if (num_rot == 3)
     {
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 2, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 2, y_pos, color);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos, color.r, color.g, color.b);
     }
   }
 
@@ -119,17 +120,17 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
   {
     if (num_rot == 0 || num_rot == 2)
     { // Horizontal
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 2, y_pos, color);
-      this->display->drawPixel(x_pos + 3, y_pos, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 3, y_pos, color.r, color.g, color.b);
     }
     if (num_rot == 1 || num_rot == 3)
     { // Vertical
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos, y_pos - 2, color);
-      this->display->drawPixel(x_pos, y_pos - 3, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 2, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 3, color.r, color.g, color.b);
     }
   }
 
@@ -138,17 +139,17 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
   {
     if (num_rot == 0 || num_rot == 2)
     {
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos, y_pos - 2, color);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 2, color.r, color.g, color.b);
     }
     if (num_rot == 1 || num_rot == 3)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 2, y_pos - 1, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos - 1, color.r, color.g, color.b);
     }
   }
 
@@ -157,17 +158,17 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
   {
     if (num_rot == 0 || num_rot == 2)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 2, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 2, color.r, color.g, color.b);
     }
     if (num_rot == 1 || num_rot == 3)
     {
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 2, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
     }
   }
 
@@ -176,31 +177,31 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
   {
     if (num_rot == 0)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos + 2, y_pos, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
     }
     if (num_rot == 1)
     {
-      this->display->drawPixel(x_pos, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos, y_pos - 2, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
+      this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 2, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
     }
     if (num_rot == 2)
     {
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 2, y_pos - 1, color);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 2, y_pos - 1, color.r, color.g, color.b);
     }
     if (num_rot == 3)
     {
-      this->display->drawPixel(x_pos + 1, y_pos, color);
-      this->display->drawPixel(x_pos, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 1, color);
-      this->display->drawPixel(x_pos + 1, y_pos - 2, color);
+      this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
+      this->display->SetPixel(x_pos + 1, y_pos - 2, color.r, color.g, color.b);
     }
   }
 
@@ -209,39 +210,39 @@ void TetrisMatrixDraw::drawShape(int blocktype, uint16_t color, int x_pos, int y
    {
      if (num_rot == 0)
      {
-       this->display->drawPixel(x_pos, y_pos, color);
-       this->display->drawPixel(x_pos + 1, y_pos, color);
-       this->display->drawPixel(x_pos, y_pos - 1, color);
+       this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos + 1, y_pos, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
      }
      if (num_rot == 1)
      {
-       this->display->drawPixel(x_pos, y_pos, color);
-       this->display->drawPixel(x_pos, y_pos - 1, color);
-       this->display->drawPixel(x_pos + 1, y_pos - 1, color);
+       this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
      }
      if (num_rot == 2)
      {
-       this->display->drawPixel(x_pos + 1 , y_pos, color);
-       this->display->drawPixel(x_pos + 1 , y_pos - 1, color);
-       this->display->drawPixel(x_pos, y_pos - 1, color);
+       this->display->SetPixel(x_pos + 1 , y_pos, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos + 1 , y_pos - 1, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos, y_pos - 1, color.r, color.g, color.b);
      }
      if (num_rot == 3)
      {
-       this->display->drawPixel(x_pos, y_pos, color);
-       this->display->drawPixel(x_pos + 1, y_pos , color);
-       this->display->drawPixel(x_pos + 1, y_pos - 1, color);
+       this->display->SetPixel(x_pos, y_pos, color.r, color.g, color.b);
+       this->display->SetPixel(x_pos + 1, y_pos , color.r, color.g, color.b);
+       this->display->SetPixel(x_pos + 1, y_pos - 1, color.r, color.g, color.b);
      }
    }
 }
 
-void TetrisMatrixDraw::drawLargerBlock(int x_pos, int y_pos, int scale, uint16_t color){
-  this->display->fillRect(x_pos, y_pos, scale, scale, color);
+void TetrisMatrixDraw::drawLargerBlock(int x_pos, int y_pos, int scale, Color color){
+  fillRect(x_pos, y_pos, scale, scale, color);
   if(drawOutline){
-    this->display->drawRect(x_pos, y_pos, scale, scale, this->outLineColour);
+    //this->display->drawRect(x_pos, y_pos, scale, scale, this->outLineColour);
   }
 }
 
-void TetrisMatrixDraw::drawLargerShape(int scale, int blocktype, uint16_t color, int x_pos, int y_pos, int num_rot)
+void TetrisMatrixDraw::drawLargerShape(int scale, int blocktype, Color color, int x_pos, int y_pos, int num_rot)
 {
   int offset1 = 1 * scale;
   int offset2 = 2 * scale;
@@ -448,7 +449,7 @@ void TetrisMatrixDraw::drawLargerShape(int scale, int blocktype, uint16_t color,
 void TetrisMatrixDraw::setNumState(int index, int value, int x_shift)
 {
     if(index < TETRIS_MAX_NUMBERS) {
-      Serial.println(value);
+      cout << value << endl;
         this->numstates[index].num_to_draw = value;
         this->numstates[index].x_shift = x_shift;
         this->numstates[index].fallindex = 0;
@@ -456,18 +457,18 @@ void TetrisMatrixDraw::setNumState(int index, int value, int x_shift)
     }
 }
 
-void TetrisMatrixDraw::setTime(String time, bool forceRefresh)
+void TetrisMatrixDraw::setTime(string time, bool forceRefresh)
 {
     this->sizeOfValue = 4;
-    time.replace(":", "");
+    time.erase(std::remove(time.begin(), time.end(), ':'), time.end());
     for (uint8_t pos = 0; pos < 4; pos++)
     {
       int xOffset = pos * TETRIS_DISTANCE_BETWEEN_DIGITS * this->scale;
       if(pos >= 2){
         xOffset += (3 * this->scale);
       }
-      String individualNumber = time.substring(pos, pos + 1);
-      int number = (individualNumber != " ") ? individualNumber.toInt() : -1;
+      string individualNumber = time.substr(pos, 1);
+      int number = (individualNumber != " ") ? stoi(individualNumber) : -1;
       // Only change the number if its different or being forced
       if (forceRefresh || number != this->numstates[pos].num_to_draw)
       {
@@ -478,14 +479,14 @@ void TetrisMatrixDraw::setTime(String time, bool forceRefresh)
 
 void TetrisMatrixDraw::setNumbers(int value, bool forceRefresh)
 {
-  String strValue = String(value);
+  string strValue = to_string(value);
   if(strValue.length() <= TETRIS_MAX_NUMBERS){
     this->sizeOfValue = strValue.length();
     int currentXShift = 0;
     for (uint8_t pos = 0; pos < this->sizeOfValue; pos++)
     {
       currentXShift = TETRIS_DISTANCE_BETWEEN_DIGITS * this->scale * pos;
-      int number = strValue.substring(pos, pos + 1).toInt();
+      int number = stoi(strValue.substr(pos, 1));
       // Only change the number if its different or being forced
       if (forceRefresh || number != this->numstates[pos].num_to_draw)
       {
@@ -495,18 +496,18 @@ void TetrisMatrixDraw::setNumbers(int value, bool forceRefresh)
       }
     }
   } else {
-    Serial.println("Number too long");
+    cout << "Number too long" << endl;
   }
 }
 
-void TetrisMatrixDraw::setText(String txt, bool forceRefresh)
+void TetrisMatrixDraw::setText(string txt, bool forceRefresh)
 {
     this->sizeOfValue = txt.length();
     int currentXShift = 0;
     for (uint8_t pos = 0; pos < this->sizeOfValue; pos++)
     {
       currentXShift = TETRIS_DISTANCE_BETWEEN_DIGITS * this->scale * pos;
-      char letter = txt.charAt(pos);
+      char letter = txt[pos];
       if (forceRefresh || (int)letter != this->numstates[pos].num_to_draw)
       {
         setNumState(pos, (int)letter, currentXShift);
@@ -736,23 +737,31 @@ bool TetrisMatrixDraw::drawNumbers(int x, int yFinish, bool displayColon)
   return finishedAnimating;
 }
 
-void TetrisMatrixDraw::drawColon(int x, int y, uint16_t colonColour){
+void TetrisMatrixDraw::drawColon(int x, int y, Color colonColour){
   int colonSize = 2 * this->scale;
   int xColonPos = x + (TETRIS_DISTANCE_BETWEEN_DIGITS * 2 * this->scale);  
-  display->fillRect(xColonPos, y + (12 * this->scale), colonSize, colonSize, colonColour);
-  display->fillRect(xColonPos, y + (8 * this->scale), colonSize, colonSize, colonColour);
+  fillRect(xColonPos, y + (12 * this->scale), colonSize, colonSize, colonColour);
+  fillRect(xColonPos, y + (8 * this->scale), colonSize, colonSize, colonColour);
+}
+
+void TetrisMatrixDraw::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, Color color){
+  for (int curX = x; curX < x + w; curX++){
+    for(int curY = y; curY < y + h; curY++){
+      display->SetPixel(curX, curY, color.r, color.g, color.b);
+    }
+  }
 }
 
 void TetrisMatrixDraw::intialiseColors(){
-    this->tetrisRED = 0xF800;
-    this->tetrisGREEN = 0x07E0;
-    this->tetrisBLUE = 0x325F;
-    this->tetrisWHITE = 0xFFFF;
-    this->tetrisYELLOW = 0xFFE0;
-    this->tetrisCYAN = 0x07FF;
-    this->tetrisMAGENTA = 0xF81F;
-    this->tetrisORANGE = 0xFB00;
-    this->tetrisBLACK = 0x0000;
+    this->tetrisRED = Color(255, 0, 0);
+    this->tetrisGREEN = Color(0, 255, 0);
+    this->tetrisBLUE = Color(49, 73, 255);
+    this->tetrisWHITE = Color(255, 255, 255);
+    this->tetrisYELLOW = Color(255, 255, 0);
+    this->tetrisCYAN = Color(0, 255, 255);
+    this->tetrisMAGENTA = Color(255, 0, 255);
+    this->tetrisORANGE = Color(255, 97, 0);
+    this->tetrisBLACK = Color(0, 0, 0);
     
     this->tetrisColors[0] = this->tetrisRED; 
     this->tetrisColors[1] = this->tetrisGREEN; 
