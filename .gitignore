@@ -1,2 +1,4 @@
-.vscode/c_cpp_properties.json
-.vscode/arduino.json
+src/TetrisMatrixDraw.o
+src/libTetrisAnimation.a
+examples/Clock.o
+examples/Clock
