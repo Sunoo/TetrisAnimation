@@ -449,7 +449,7 @@ void TetrisMatrixDraw::drawLargerShape(int scale, int blocktype, Color color, in
 void TetrisMatrixDraw::setNumState(int index, int value, int x_shift)
 {
     if(index < TETRIS_MAX_NUMBERS) {
-      cout << value << endl;
+      //cout << value << endl;
         this->numstates[index].num_to_draw = value;
         this->numstates[index].x_shift = x_shift;
         this->numstates[index].fallindex = 0;
@@ -496,7 +496,7 @@ void TetrisMatrixDraw::setNumbers(int value, bool forceRefresh)
       }
     }
   } else {
-    cout << "Number too long" << endl;
+    //cout << "Number too long" << endl;
   }
 }
 

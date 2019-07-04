@@ -1,12 +1,21 @@
 #include "TetrisMatrixDraw.h"
 #include "led-matrix.h"
+#include "graphics.h"
 
+#include <getopt.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <unistd.h>
-#include <iomanip>
-#include <thread>
 
 using namespace rgb_matrix;
-using std::chrono::system_clock;
+
+volatile bool interrupt_received = false;
+static void InterruptHandler(int signo) {
+  interrupt_received = true;
+}
 
 int main(int argc, char *argv[]) {
   RGBMatrix::Options matrix_options;
@@ -29,18 +38,24 @@ int main(int argc, char *argv[]) {
     return 1;
 
   matrix->SetBrightness(brightness);
-  
+
+  char text_buffer[6];
+  time_t rawtime;
+  struct tm *timeinfo;
+
+  signal(SIGTERM, InterruptHandler);
+  signal(SIGINT, InterruptHandler);
+
   TetrisMatrixDraw tetris(*matrix);
 
-  while (true) {
-      std::time_t tt = system_clock::to_time_t(system_clock::now());
-      struct std::tm *ptm = std::localtime(&tt);
-      std::stringstream ss;
-      ss << std::put_time(ptm, time_format);
-    
-      tetris.setTime(ss.str());
+  while (!interrupt_received) {
+      time(&rawtime);
+      timeinfo = localtime(&rawtime);
+      strftime(text_buffer, 6, time_format, timeinfo);
+
+      tetris.setTime(text_buffer);
       bool finished = false;
-      while (!finished)
+      while (!finished && !interrupt_received)
       {
         matrix->Clear();
         finished = tetris.drawNumbers(1, 16, true);
@@ -48,9 +63,7 @@ int main(int argc, char *argv[]) {
         usleep(100000);
       }
 
-      ++ptm->tm_min;
-      ptm->tm_sec=0;
-      std::this_thread::sleep_until(system_clock::from_time_t(mktime(ptm)));
+      sleep(1);
   }
 
   // Finished. Shut down the RGB matrix.
