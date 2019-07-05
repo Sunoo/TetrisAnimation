@@ -52,7 +52,6 @@ class TetrisMatrixDraw
         Canvas  *display;
         bool drawNumbers(int x = 0, int y = 0, bool displayColon = false);
         bool drawText(int x = 0, int y = 0);
-        void drawChar(string letter, uint8_t x, uint8_t y, Color color);
         void drawShape(int blocktype, Color color, int x_pos, int y_pos, int num_rot);
         void drawLargerShape(int scale, int blocktype, Color color, int x_pos, int y_pos, int num_rot);
         void setTime(string time, bool forceRefresh = false);
@@ -82,6 +81,7 @@ class TetrisMatrixDraw
         void resetNumStates();
         void drawLargerBlock(int x_pos, int y_pos, int scale, Color color);
         void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, Color color);
+        void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, Color color);
         numstate numstates[TETRIS_MAX_NUMBERS];
         int sizeOfValue;
 };
