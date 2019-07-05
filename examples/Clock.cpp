@@ -37,8 +37,14 @@ int main(int argc, char *argv[]) {
       struct std::tm *ptm = std::localtime(&tt);
       std::stringstream ss;
       ss << std::put_time(ptm, time_format);
-    
-      tetris.setTime(ss.str());
+      string time = ss.str();
+      
+      if (time[0] == '0')
+      {
+        time[0] = ' ';
+      }
+      
+      tetris.setTime(time);
       bool finished = false;
       while (!finished)
       {
