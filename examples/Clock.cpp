@@ -24,13 +24,15 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  RGBMatrix *matrix = rgb_matrix::CreateMatrixFromOptions(matrix_options, runtime_opt);
-  if (matrix == NULL)
+  RGBMatrix *canvas = rgb_matrix::CreateMatrixFromOptions(matrix_options, runtime_opt);
+  if (canvas == NULL)
     return 1;
 
-  matrix->SetBrightness(brightness);
+  canvas->SetBrightness(brightness);
   
-  TetrisMatrixDraw tetris(*matrix);
+  FrameCanvas *offscreen = canvas->CreateFrameCanvas();
+  
+  TetrisMatrixDraw tetris(*offscreen);
 
   while (true) {
       std::time_t tt = system_clock::to_time_t(system_clock::now());
@@ -48,10 +50,11 @@ int main(int argc, char *argv[]) {
       bool finished = false;
       while (!finished)
       {
-        matrix->Clear();
+        offscreen->Clear();
         finished = tetris.drawNumbers(1, 16, true);
 
         usleep(100000);
+        canvas->SwapOnVSync(offscreen);
       }
 
       ++ptm->tm_min;
@@ -59,9 +62,9 @@ int main(int argc, char *argv[]) {
       std::this_thread::sleep_until(system_clock::from_time_t(mktime(ptm)));
   }
 
-  // Finished. Shut down the RGB matrix.
-  matrix->Clear();
-  delete matrix;
+  // Finished. Shut down the RGB canvas.
+  canvas->Clear();
+  delete canvas;
 
   write(STDOUT_FILENO, "\n", 1);  // Create a fresh new line after ^C on screen
   return 0;
