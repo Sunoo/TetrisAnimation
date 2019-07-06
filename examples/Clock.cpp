@@ -33,8 +33,6 @@ int main(int argc, char *argv[]) {
   char *time_format = "%I:%M";
   bool forceRefresh = false;
   int scale = 1;
-  bool drawOutline = false;
-  Color outLineColour = Color(0, 0, 0);
 
   int opt;
   while ((opt = getopt(argc, argv, "b:x:y:0trd")) != -1) {

@@ -1,21 +1,11 @@
 # TetrisAnimation
 
-An Arduino library for drawing letters and numbers using a falling block style animation.
+A library for drawing letters and numbers using a falling block style animation on the Raspberry Pi.
 
 [![alt text](https://j.gifs.com/6RvBDl.gif "Tetris clock animation")](https://youtu.be/BGmjvfqf_0U)
 
-Deisgined orginally for RGB LED Matrixes, but it should in theory work with any display that uses the Adafruit GFX library.
-
 ### Displays/Libraries tested ( Examples included)
-- RGB LED Matrix using the [PxMatrix library](https://github.com/2dom/PxMatrix/) - ESP8266 and ESP32
-- VGA Display using the [Bitluni ESP32Lib](https://github.com/bitluni/ESP32Lib) - ESP32
-- Nokia 5110 Screen using a modified [Adafruit PCD8544 library](https://github.com/bbx10/Adafruit-PCD8544-Nokia-5110-LCD-library/tree/esp8266) - ESP8266
-
-PLEASE NOTE: There are some issues with ESP8266 sketches that make use of WiFi as well, there is an issue open for this: https://github.com/toblum/TetrisAnimation/issues/3
-
-## Installation & Setup
-
-Search for "Tetris Animation" on the Arduino library manager
+- RGB LED Matrix using the [rpi-rgb-led-matrix library](https://github.com/hzeller/rpi-rgb-led-matrix/) - Raspberry Pi
 
 ## Basic Usage
 
@@ -24,7 +14,7 @@ See examples for more details.
 ### Intialise library by passing in a display:
 
 ```
-PxMATRIX display(64, 32, P_LAT, P_OE, P_A, P_B, P_C, P_D, P_E); //Intialise any display that makes use of Adafruit GFX
+Canvas *display = rgb_matrix::CreateMatrixFromFlags(&argc, &argv); //Intialise any display that makes use of rpi-rgb-led-matrix
 TetrisMatrixDraw tetris(display); //Pass it into the library
 
 ```
