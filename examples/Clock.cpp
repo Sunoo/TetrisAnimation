@@ -25,7 +25,6 @@ static int usage(const char *progname, RGBMatrix::Options &matrix_options, rgb_m
   fprintf(stderr, "Options:\n");
   rgb_matrix::PrintMatrixFlags(stderr, matrix_options, runtime_opt);
   fprintf(stderr,
-          "\t-b <brightness>   : Sets brightness percent. Default: 100.\n"
           "\t-x <x>            : Starting X position of displayed time. Default: 1\n"
           "\t-y <yFinish>      : Ending Y position of displayed time. Default: 16\n"
           "\t-0                : Show leading zeros in the hour.\n"
@@ -44,7 +43,6 @@ int main(int argc, char *argv[]) {
     return usage(argv[0], matrix_options, runtime_opt);
   }
 
-  int brightness = 100;
   int x = 1;
   int yFinish = 16;
   bool leadingZero = false;
@@ -53,11 +51,8 @@ int main(int argc, char *argv[]) {
   int scale = 1;
 
   int opt;
-  while ((opt = getopt(argc, argv, "b:x:y:0trd")) != -1) {
+  while ((opt = getopt(argc, argv, "x:y:0trd")) != -1) {
     switch (opt) {
-      case 'b':
-        brightness = atoi(optarg);
-        break;
       case 'x':
         x = atoi(optarg);
         break;
@@ -82,19 +77,12 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (brightness < 1 || brightness > 100) {
-    fprintf(stderr, "Brightness is outside usable range.\n");
-    return 1;
-  }
-
   canvas = rgb_matrix::CreateMatrixFromOptions(matrix_options, runtime_opt);
   if (canvas == NULL)
     return 1;
 
   printf("Size: %dx%d. Hardware gpio mapping: %s\n", canvas->width(), canvas->height(), matrix_options.hardware_mapping);
 
-  canvas->SetBrightness(brightness);
-  
   FrameCanvas *offscreen = canvas->CreateFrameCanvas();
   
   TetrisMatrixDraw tetris(*offscreen);
