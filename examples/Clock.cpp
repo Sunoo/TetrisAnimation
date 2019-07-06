@@ -1,6 +1,7 @@
 #include "TetrisMatrixDraw.h"
 #include "led-matrix.h"
 
+#include <signal.h>
 #include <unistd.h>
 #include <iomanip>
 #include <thread>
@@ -8,11 +9,21 @@
 using namespace rgb_matrix;
 using std::chrono::system_clock;
 
-static int usage(const char *progname) {
+RGBMatrix *canvas;
+
+static void InterruptHandler(int signo) {
+  canvas->Clear();
+  delete canvas;
+  
+  printf("Received CTRL-C. Exiting.\n");
+  exit(0);
+}
+
+static int usage(const char *progname, RGBMatrix::Options &matrix_options, rgb_matrix::RuntimeOptions &runtime_opt) {
   fprintf(stderr, "usage: %s [options]\n", progname);
   fprintf(stderr, "Displays the time as a series of falling Tetris blocks.\n");
   fprintf(stderr, "Options:\n");
-  rgb_matrix::PrintMatrixFlags(stderr);
+  rgb_matrix::PrintMatrixFlags(stderr, matrix_options, runtime_opt);
   fprintf(stderr,
           "\t-b <brightness>   : Sets brightness percent. Default: 100.\n"
           "\t-x <x>            : Starting X position of displayed time. Default: 1\n"
@@ -26,6 +37,13 @@ static int usage(const char *progname) {
 }
 
 int main(int argc, char *argv[]) {
+  RGBMatrix::Options matrix_options;
+  matrix_options.rows = 16;
+  rgb_matrix::RuntimeOptions runtime_opt;
+  if (!rgb_matrix::ParseOptionsFromFlags(&argc, &argv, &matrix_options, &runtime_opt)) {
+    return usage(argv[0], matrix_options, runtime_opt);
+  }
+
   int brightness = 100;
   int x = 1;
   int yFinish = 16;
@@ -60,7 +78,7 @@ int main(int argc, char *argv[]) {
         break;
       break;
       default:
-        return usage(argv[0]);
+        return usage(argv[0], matrix_options, runtime_opt);
     }
   }
 
@@ -69,14 +87,11 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  RGBMatrix::Options matrix_options;
-  matrix_options.rows = 16;
-  rgb_matrix::RuntimeOptions runtime_opt;
-  rgb_matrix::ParseOptionsFromFlags(&argc, &argv, &matrix_options, &runtime_opt);
-
-  RGBMatrix *canvas = rgb_matrix::CreateMatrixFromOptions(matrix_options, runtime_opt);
+  canvas = rgb_matrix::CreateMatrixFromOptions(matrix_options, runtime_opt);
   if (canvas == NULL)
     return 1;
+
+  printf("Size: %dx%d. Hardware gpio mapping: %s\n", canvas->width(), canvas->height(), matrix_options.hardware_mapping);
 
   canvas->SetBrightness(brightness);
   
@@ -84,6 +99,11 @@ int main(int argc, char *argv[]) {
   
   TetrisMatrixDraw tetris(*offscreen);
   tetris.scale = scale;
+
+  signal(SIGTERM, InterruptHandler);
+  signal(SIGINT, InterruptHandler);
+
+  printf("Press <CTRL-C> to exit and reset LEDs\n");
 
   while (true) {
       std::time_t tt = system_clock::to_time_t(system_clock::now());
@@ -112,11 +132,5 @@ int main(int argc, char *argv[]) {
       ptm->tm_sec=0;
       std::this_thread::sleep_until(system_clock::from_time_t(mktime(ptm)));
   }
-
-  // Finished. Shut down the RGB canvas.
-  canvas->Clear();
-  delete canvas;
-
-  write(STDOUT_FILENO, "\n", 1);  // Create a fresh new line after ^C on screen
   return 0;
 }
