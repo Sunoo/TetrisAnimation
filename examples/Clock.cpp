@@ -31,6 +31,7 @@ static int usage(const char *progname, RGBMatrix::Options &matrix_options, rgb_m
           "\t-t                : Use 24-hour clock.\n"
           "\t-r                : Force refresh of all digits every minute.\n"
           "\t-d                : Use double size blocks.\n"
+          "\t-s <animSpeed>    : Microseconds between animation frames. Default: 100000\n"
           );
   return 1;
 }
@@ -49,9 +50,10 @@ int main(int argc, char *argv[]) {
   char *time_format = "%I:%M";
   bool forceRefresh = false;
   int scale = 1;
+  int animSpeed = 100000;
 
   int opt;
-  while ((opt = getopt(argc, argv, "x:y:0trd")) != -1) {
+  while ((opt = getopt(argc, argv, "x:y:0trds:")) != -1) {
     switch (opt) {
       case 'x':
         x = atoi(optarg);
@@ -70,6 +72,9 @@ int main(int argc, char *argv[]) {
         break;
       case 'd':
         scale = 2;
+        break;
+      case 's':
+        animSpeed = atoi(optarg);
         break;
       break;
       default:
@@ -112,7 +117,7 @@ int main(int argc, char *argv[]) {
         offscreen->Clear();
         finished = tetris.drawNumbers(x, yFinish, true);
 
-        usleep(100000);
+        usleep(animSpeed);
         canvas->SwapOnVSync(offscreen);
       }
 
